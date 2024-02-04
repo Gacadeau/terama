@@ -29,6 +29,7 @@ function VideoProvider(props) {
       if(online){
         const response = await fetch(`/api/posts/watch/${post}/0/${user}`);
         const data = await response.json();
+        console.log('data:',data[0]);
         if (data[0]) setVideo(data[0]);
       } 
     }
