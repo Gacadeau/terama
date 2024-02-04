@@ -162,7 +162,7 @@ function Navbar(props) {
       fetchProfile(auto.session.Photo)
     }
   }
-  }, [auto])
+  }, [auto,online])
 
   useEffect(() => {
     if(online){
@@ -189,7 +189,7 @@ function Navbar(props) {
        return () => clearInterval(interval);
     }
     
-  }, [auto]);
+  }, [auto,online]);
 
   //useEffect pour cacher le box d'account en cliquant n'importe où dans le DOM
   useEffect(() => {

@@ -9,7 +9,6 @@ function VideoProvider(props) {
   const [video, setVideo] = useState(null);
   const [online, setOnline] = useState(true);
 
-
   useEffect(()=>{
     const handleOnlineStatusChange = () =>{
       setOnline(navigator.onLine);
@@ -40,7 +39,10 @@ function VideoProvider(props) {
         fetchData(router.query.v, auto.session.ID)
       }
     }
-  }, [router.query.v,auto]); // Ajout des dépendances router.query.v et auto.session
+    else{
+      console.log('Go to  downloads videos!')
+    }
+  }, [router.query.v,auto,online]); // Ajout des dépendances router.query.v et auto.session
 
   return (
     <VideoContext.Provider
