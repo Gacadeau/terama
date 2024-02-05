@@ -185,7 +185,7 @@ function Describe({ video }) {
 
  const video_Url = `https://terama.vercel.app/Videos/${video.Video}`;
 
-const handleDownload = async () => {  
+ const handleDownload = async () => {  
   if(online){
     try {
       const registration = await navigator.serviceWorker.ready;
@@ -197,12 +197,12 @@ const handleDownload = async () => {
         url: video_Url,
         blob,
         name: video.Title,
-        body: video.Body,
-        page: video.PageName,
-        profil: video.Image,
-        create: video.Created_at,
-        Uuid: video.Uuid,
-        uniid: video.uniid
+        body:video.Body,
+        page:video.PageName,
+        profil:video.Image,
+        create:video.Created_at,
+        Uuid:video.Uuid,
+        uniid:video.uniid
       });
 
       console.log('Video ajoutée au cache avec succès.');
@@ -210,13 +210,15 @@ const handleDownload = async () => {
       console.error('Erreur lors du téléchargement de la vidéo:', error);
     }
   }
-};
+  };
 
 
   
   const shareOnFacebook = () => {
+    if(online)
     const url = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(videoUrl)}`;
     window.open(url, '_blank');
+    }
   };
 
   const shareOnYouTube = () => {

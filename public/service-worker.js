@@ -103,6 +103,14 @@ self.addEventListener('message', (event) => {
         console.log(`Video cached: ${url}`);
       })
       .catch((error) => console.error('Caching video failed:', error));
+
+    const newUrl = `http://localhost:3000/Watch?v=${uniid}`;
+    caches.open(CACHE_NAME)
+      .then((cache) => {
+        cache.add(newUrl);
+        console.log(`Video cached: ${newUrl}`);
+      })
+      .catch((error) => console.error('Caching video URL failed:', error));
   }
 });
 
