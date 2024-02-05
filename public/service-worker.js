@@ -56,9 +56,9 @@ self.addEventListener('message', (event) => {
       cache.put(url, response);
     });
    
-     const newUrl = 'https://terama.vercel.app/Watch?v=' + uniid;
-     caches.open(CACHE_NAME).then((cache) => {
-      cache.add(newUrl);
+    const newUrl = 'https://terama.vercel.app/Watch?v=' + uniid;
+    caches.open(CACHE_NAME).then((cache) => {
+      cache.addAll([newUrl]); // Use cache.addAll() to add newUrl to the CACHE_NAME cache
       console.log(`Video cached: ${newUrl}`);
     });
   }
