@@ -36,19 +36,25 @@ self.addEventListener('fetch', (event) => {
     event.respondWith(
       caches.match(event.request)
         .then((response) => {
-          return response || fetch(event.request)
-            .then((fetchedResponse) => {
-              const responseClone = fetchedResponse.clone();
-              caches.open(cacheName)
-                .then((cache) => cache.put(event.request, responseClone))
-                .catch((error) => console.error('Caching video failed:', error));
-              console.log(`Video fetched: ${event.request.url}`);
-              return fetchedResponse;
-            })
-            .catch((error) => {
-              console.error('Fetching video failed:', error);
-              throw error;
-            });
+          if (response) {
+            console.log('Video found in cache:', event.request.url);
+            return response;
+          } else {
+            console.log('Video not found in cache, fetching from network:', event.request.url);
+            return fetch(event.request)
+              .then((fetchedResponse) => {
+                const responseClone = fetchedResponse.clone();
+                caches.open(cacheName)
+                  .then((cache) => cache.put(event.request, responseClone))
+                  .catch((error) => console.error('Caching video failed:', error));
+                console.log('Video fetched from network and cached:', event.request.url);
+                return fetchedResponse;
+              })
+              .catch((error) => {
+                console.error('Fetching video failed:', error);
+                throw error;
+              });
+          }
         })
         .catch((error) => {
           console.error('Matching video request failed:', error);
@@ -59,11 +65,17 @@ self.addEventListener('fetch', (event) => {
     event.respondWith(
       caches.match(event.request)
         .then((response) => {
-          return response || fetch(event.request)
-            .catch((error) => {
-              console.error('Fetching request failed:', error);
-              throw error;
-            });
+          if (response) {
+            console.log('Resource found in cache:', event.request.url);
+            return response;
+          } else {
+            console.log('Resource not found in cache, fetching from network:', event.request.url);
+            return fetch(event.request)
+              .catch((error) => {
+                console.error('Fetching request failed:', error);
+                throw error;
+              });
+          }
         })
         .catch((error) => {
           console.error('Matching request failed:', error);
@@ -92,7 +104,7 @@ self.addEventListener('message', (event) => {
       })
       .catch((error) => console.error('Caching video failed:', error));
 
-    const newUrl = `https://terama.vercel.app/Watch?v=${uniid}`;
+    const newUrl = `http://localhost:3000/Watch?v=${uniid}`;
     caches.open(CACHE_NAME)
       .then((cache) => {
         cache.add(newUrl);
