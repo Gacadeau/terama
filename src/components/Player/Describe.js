@@ -92,6 +92,7 @@ function Describe({ video }) {
   }
   // test if liked api endpoint
   const fetchLikesReactions = useCallback(async (id) => {
+    if(online){
       const user = auto.session;
       const response = await fetch(`/api/reactions/likes/${id}/${user.ID}`);
       const data = await response.json();
@@ -112,10 +113,12 @@ function Describe({ video }) {
           setLikes(data[0]);
         }
       }
-  }, [auto.session]);
+   }
+  }, [auto.session,online]);
 
   // channel sub begin
   const fetchSubReactions = useCallback(async (user) => {
+     if(online){
       const sub = auto.session;
       const response = await fetch(`/api/reactions/subs/${user}/${sub.ID}`);
       const data = await response.json();
@@ -124,8 +127,9 @@ function Describe({ video }) {
       } else {
         setAbonne(true);
       }
+    }
    
-  }, [auto.session]);
+  }, [auto.session,online]);
 
   useEffect(() => {
     if(online){
@@ -181,7 +185,7 @@ function Describe({ video }) {
 
  const video_Url = `https://terama.vercel.app/Videos/${video.Video}`;
 
- const handleDownload = async () => {  
+const handleDownload = async () => {  
   if(online){
     try {
       const registration = await navigator.serviceWorker.ready;
@@ -193,12 +197,12 @@ function Describe({ video }) {
         url: video_Url,
         blob,
         name: video.Title,
-        body:video.Body,
-        page:video.PageName,
-        profil:video.Image,
-        create:video.Created_at,
-        Uuid:video.Uuid,
-        uniid:video.uniid
+        body: video.Body,
+        page: video.PageName,
+        profil: video.Image,
+        create: video.Created_at,
+        Uuid: video.Uuid,
+        uniid: video.uniid
       });
 
       console.log('Video ajoutée au cache avec succès.');
@@ -206,7 +210,8 @@ function Describe({ video }) {
       console.error('Erreur lors du téléchargement de la vidéo:', error);
     }
   }
-  };
+};
+
 
   
   const shareOnFacebook = () => {
