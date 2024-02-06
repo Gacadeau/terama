@@ -67,7 +67,7 @@ function Describe({ video }) {
       }
       addLike(vidid, user.ID, stats)
     }
-  }
+   }
   }
 
   // add like api endpoint
@@ -186,36 +186,36 @@ function Describe({ video }) {
  const video_Url = `https://terama.vercel.app/Videos/${video.Video}`;
 
  const handleDownload = async () => {  
-  if(online){
-    try {
-      const registration = await navigator.serviceWorker.ready;
-      const response = await fetch(video_Url);
-      const blob = await response.blob();
+  console.log('video:',video);
+    if(online){
+      console.log('you are :',online);
+      try {
+        const registration = await navigator.serviceWorker.ready;
+        const response = await fetch(video_Url);
+        const blob = await response.blob();
 
-      registration.active.postMessage({
-        type: 'CACHE_VIDEO',
-        url: video_Url,
-        blob,
-        name: video.Title,
-        body:video.Body,
-        page:video.PageName,
-        profil:video.Image,
-        create:video.Created_at,
-        Uuid:video.Uuid,
-        uniid:video.uniid
-      });
+        registration.active.postMessage({
+          type: 'CACHE_VIDEO',
+          url: video_Url,
+          blob,
+          name: video.Title,
+          body:video.Body,
+          page:video.PageName,
+          profil:video.Image,
+          create:video.Created_at,
+          Uuid:video.Uuid,
+          uniid:video.uniid
+        });
 
-      console.log('Video ajoutée au cache avec succès.');
-    } catch (error) {
-      console.error('Erreur lors du téléchargement de la vidéo:', error);
+        console.log('Video ajoutée au cache avec succès.');
+      } catch (error) {
+        console.error('Erreur lors du téléchargement de la vidéo:', error);
+      }
     }
-  }
   };
-
-
   
   const shareOnFacebook = () => {
-    if(online)
+    if(online){
     const url = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(videoUrl)}`;
     window.open(url, '_blank');
     }
@@ -499,6 +499,6 @@ function Describe({ video }) {
       )}
     </>
   )
-}
+ }
 
 export default Describe
