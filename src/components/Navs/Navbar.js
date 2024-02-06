@@ -124,7 +124,6 @@ function Navbar(props) {
     }
   };
   useEffect(() => {
-    if(online){
     const fetchLogos = async () => {
       try {
         const resp1 = await fetch('/logo/TeramaFlixpic.png');
@@ -161,8 +160,8 @@ function Navbar(props) {
     if (auto.session) {
       fetchProfile(auto.session.Photo)
     }
-  }
-  }, [auto,online])
+  
+  }, [auto])
 
   useEffect(() => {
     if(online){

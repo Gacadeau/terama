@@ -7,7 +7,7 @@ function Cached({ video }) {
   useEffect(() => {
     const fetchImage = async () => {
       try {
-        const response = await fetch(`/Thumbnails/${video.profil}`);
+        const response = await fetch(`/Thumbnails/${video.Image}`);
         const blob = await response.blob();
         const blobUrl = URL.createObjectURL(blob);
         setImageBlobUrl(blobUrl);
@@ -51,7 +51,7 @@ function Cached({ video }) {
           </div>
           <div className="flex flex-col">
             <h1 className="font-semibold text-[1rem] md:text-[1.5rem]">{video.name}</h1>
-            <p className="text-sm md:text-base">{video.body.split('\n').slice(0, 2).join('\n')}</p>
+            <p className="text-sm md:text-base">{video.Body.split('\n').slice(0, 2).join('\n')}</p>
             <Link href={`/profile?c=${video.Uuid}`}>
               <div className="description flex items-center  text-sm">
                 <Image width={80} height={80} alt='profile' className="lg:w-10 w-8 lg:h-10 h-8 my-1 ml-15 rounded-full " src={profBlobUrl} />

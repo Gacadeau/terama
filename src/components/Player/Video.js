@@ -3,6 +3,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { usePeriod } from '../Hooks/usePeriod'
 function Video({ video }) {
+  console.log('playedVideo:',video);
   const period = usePeriod(video.Created_at)
   return (
     <>

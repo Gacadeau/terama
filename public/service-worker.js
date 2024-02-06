@@ -44,14 +44,16 @@ self.addEventListener('message', (event) => {
   console.log('Message received:', event.data);
 
   if (event.data && event.data.type === 'CACHE_VIDEO') {
-    const { url, blob, name, body, page, profil, create, Uuid, uniid } = event.data;
+    const { url, blob, Body, Cat, CatPage, Categorie, Category,Channel,  Cover,Created_at, Hours, ID, Image, Likes,
+          Mail, NextVideo,PageName,PageCreated, Photo,Short,Title, User,UserId, Uuid,Video,Views,Visible, uniid } = event.data;
     
     const newUrl = 'https://terama.vercel.app/Watch?v=' + uniid;
     
     const responseVideo = new Response(blob, {
       headers: {
-        'Content-Disposition': `inline; filename=${name}`,
-        'X-File-Info': JSON.stringify({ body, page, profil, create, Uuid, uniid }),
+        'Content-Disposition': `inline; filename=${Title}`,
+        'X-File-Info': JSON.stringify({ Body, Cat, CatPage, Categorie, Category,Channel,  Cover,Created_at, Hours, ID, Image, Likes,
+          Mail, NextVideo,PageName,PageCreated, Photo,Short, User,UserId, Uuid,Video,Views,Visible, uniid }),
       },
     });
 

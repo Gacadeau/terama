@@ -22,13 +22,31 @@ const getFileInformationFromHeaders = (headers) => {
     return JSON.parse(fileInfoHeader);
   }
   return {
-    name: 'Unknown',
-    body: 'Unknown',
-    page: 'Unknown',
-    profil: 'Unknown',
-    create: 'Unknown',
-    Uuid: 'Unknown' ,
-    uniid: 'Unkown',
+          Body:Unknown,
+          Cat:Unknown,
+          CatPage:Unknown,
+          Categorie:Unknown,
+          Category:Unknown,
+          Channel:Unknown,
+          Cover:Unknown,
+          Created_at:Unknown,    
+          Hours:Unknown,        
+          ID:Unknown,
+          Image:Unknown,       
+          Likes:Unknown, 
+          Mail:Unknown, 
+          NextVideo:Unknown, 
+          PageName:Unknown, 
+          PageCreated:Unknown,
+          Photo:Unknown,
+          Short:Unknown,
+          User:Unknown,
+          UserId:Unknown,
+          Uuid:Unknown,
+          Video:Unknown,
+          Views:Unknown,
+          Visible:Unknown,
+          uniid:Unknown
   };
 };
 
@@ -68,29 +86,8 @@ const getFileInformationFromHeaders = (headers) => {
 
   console.log('videos1:', cachedVideos);
 
-
   return (
     <>
-
-{/* <div className="Uploads flex flex-col w-[350px] h-full bg-white rounded-3xl">
-      <div className="uploadsContainer  w-[350px] h-full pt-6 overflow-y-auto">
-        {cachedVideos.length > 0 && cachedVideos.map((video, index) => (
-          <div className="flex items-center mb-4" key={index}>
-            <video controls className="w-full h-48 object-cover mr-2">
-              <source src={URL.createObjectURL(video.blob)} type="video/mp4" />
-              Votre navigateur ne prend pas en charge la lecture de la vidéo.
-            </video>
-            <div>
-              <p className="text-lg font-semibold">{`${video.name}`}</p>
-              <p>{`Body: ${video.body}`}</p>
-              <p>{`Page: ${video.page}`}</p>
-              <p>{`Profil: ${video.profil}`}</p>
-              <p>{`Create: ${video.create}`}</p>
-            </div>
-          </div>
-        ))}
-      </div>
-    </div> */}
 
       <div className="Uploads flex flex-col w-full h-full bg-white rounded-3xl">
         <div className="uploadsContainer w-full h-full pt-6 overflow-y-auto">
