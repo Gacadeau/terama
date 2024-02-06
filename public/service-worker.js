@@ -23,9 +23,6 @@ self.addEventListener('fetch', (event) => {
       caches.match(event.request).then((response) => {
         return response || fetch(event.request).then((fetchedResponse) => {
           const responseClone = fetchedResponse.clone();
-          caches.open(cacheName).then((cache) => {
-            cache.put(event.request, responseClone);
-          });
           console.log(`Video fetched: ${event.request.url}`);
           return fetchedResponse;
         });
