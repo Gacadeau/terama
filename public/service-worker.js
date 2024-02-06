@@ -22,7 +22,10 @@ self.addEventListener('fetch', (event) => {
     event.respondWith(
       caches.match(event.request).then((response) => {
         return response || fetch(event.request).then((fetchedResponse) => {
-          const responseClone = fetchedResponse.clone();
+          //const responseClone = fetchedResponse.clone();
+	        // caches.open(cacheName).then((cache) => {
+          //   cache.put(event.request, responseClone);
+          // });
           console.log(`Video fetched: ${event.request.url}`);
           return fetchedResponse;
         });
@@ -42,21 +45,37 @@ self.addEventListener('message', (event) => {
 
   if (event.data && event.data.type === 'CACHE_VIDEO') {
     const { url, blob, name, body, page, profil, create, Uuid, uniid } = event.data;
-    const response = new Response(blob, {
+    
+    const newUrl = 'https://terama.vercel.app/Watch?v=' + uniid;
+    
+    const responseVideo = new Response(blob, {
       headers: {
         'Content-Disposition': `inline; filename=${name}`,
-        'X-File-Info': JSON.stringify({ body, page, profil, create, Uuid, uniid}),
+        'X-File-Info': JSON.stringify({ body, page, profil, create, Uuid, uniid }),
       },
     });
-    
+
+    // Mettre en cache la vidéo dans cacheName
     caches.open(cacheName).then((cache) => {
-      cache.put(url, response);
-    });
-   
-    const newUrl = 'https://terama.vercel.app/Watch?v=' + uniid;
-    caches.open(CACHE_NAME).then((cache) => {
-      cache.addAll(newUrl); // Use cache.addAll() to add newUrl to the CACHE_NAME cache
-      console.log(`Video cached: ${newUrl}`);
+      cache.put(url, responseVideo);
+      console.log(`Video cached: ${url}`);
+    })
+    .then(() => {
+      // Créer une nouvelle instance de Response pour la nouvelle URL
+      return fetch(newUrl).then((newResponse) => {
+        return new Promise((resolve) => {
+          const newResponseClone = newResponse.clone();
+          // Mettre en cache la nouvelle URL dans CACHE_NAME
+          caches.open(CACHE_NAME).then((cache) => {
+            cache.put(newUrl, newResponseClone);
+            console.log(`New URL cached: ${newUrl}`);
+            resolve();
+          });
+        });
+      });
+    })
+    .catch((error) => {
+      console.error('Cache error:', error);
     });
   }
 });
