@@ -9,7 +9,6 @@ function VideoProvider(props) {
   const [video, setVideo] = useState(null);
   const [online, setOnline] = useState(true);
 
-
   const getVideoNameFromHeaders = (headers) => {
     const contentDispositionHeader = headers.get('Content-Disposition');
     if (contentDispositionHeader) {
@@ -80,6 +79,7 @@ function VideoProvider(props) {
         console.log('online:', online);
         const response = await fetch(`/api/posts/watch/${post}/0/${user}`);
         data = await response.json();
+        console.log('dataonline:',data);
       } else {
         console.log('online:', online);
         try {
@@ -103,6 +103,7 @@ function VideoProvider(props) {
       
           // Wait for all promises to resolve
           data = await Promise.all(videoInfoPromises);
+          console.log('dataoffline:',data);
         } catch (error) {
           console.error('Error loading cached videos:', error);
         }
