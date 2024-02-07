@@ -1,7 +1,7 @@
 const CACHE_NAME = 'mon-site-cache-v1';
 const cacheName = 'downloaded-videos-cache';
 
-const urlsToCache = ['/downloads,/Watch,/'];
+const urlsToCache = ['/downloads'];
 
 self.addEventListener('install', (event) => {
   console.log('Service worker installed');
