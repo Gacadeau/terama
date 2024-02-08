@@ -2,6 +2,8 @@ import React from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { usePeriod } from '../Hooks/usePeriod'
+import { useState } from 'react'
+
 function Video({ video }) {
   console.log('playedVideo:',video);
   const [online, setOnline] = useState(true);
