@@ -44,7 +44,7 @@ function Cached({ video }) {
 
             {
                 <Link href={`/Watch?v=${video.uniid}`}>
-                  <Image width={100} height={100} src={imageBlobUrl} className="w-full h-full object-cover" alt="profil" />
+                  <Image width={100} height={100} src=`/${video.video_Image}` className="w-full h-full object-cover" alt="profil" />
                 </Link>
             }
 

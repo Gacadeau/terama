@@ -184,6 +184,7 @@ function Describe({ video }) {
 
 
  const video_Url = `https://terama.vercel.app/Videos/${video.Video}`;
+ const video_Image = `https://terama.vercel.app/Thumbnails/${video.Image}`;
 
  const handleDownload = async () => {  
   console.log('video:',video);
@@ -196,6 +197,7 @@ function Describe({ video }) {
 
         registration.active.postMessage({
           type: 'CACHE_VIDEO',
+          video_Image:video_Image,
           Body:video.Body,
           Cat:video.Cat,
           CatPage:video.CatPage,

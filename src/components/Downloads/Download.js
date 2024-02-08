@@ -22,6 +22,7 @@ const getFileInformationFromHeaders = (headers) => {
     return JSON.parse(fileInfoHeader);
   }
   return {
+          video_Image:Unkown,
           Body:Unknown,
           Cat:Unknown,
           CatPage:Unknown,
