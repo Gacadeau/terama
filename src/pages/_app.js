@@ -35,10 +35,9 @@ export default function App({ Component, pageProps }) {
       window.removeEventListener('offline',handleOnlineStatusChange);
     }
 
-  },[]);
+  },[online]);
 
 useEffect(() => {
-  
   if(!online){
   router.push('/downloads');
   }
