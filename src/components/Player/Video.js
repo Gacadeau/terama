@@ -4,11 +4,28 @@ import Image from 'next/image'
 import { usePeriod } from '../Hooks/usePeriod'
 function Video({ video }) {
   console.log('playedVideo:',video);
+  const [online, setOnline] = useState(true);
   const period = usePeriod(video.Created_at)
+
+  useEffect(()=>{
+    const handleOnlineStatusChange = () =>{
+      setOnline(navigator.onLine);
+    };
+    window.addEventListener('online',handleOnlineStatusChange);
+    window.addEventListener('offline',handleOnlineStatusChange);
+    setOnline(navigator.onLine);
+    return () =>{
+      window.removeEventListener('online' ,handleOnlineStatusChange);
+      window.removeEventListener('offline',handleOnlineStatusChange);
+    }
+
+  },[]);
+
   return (
     <>
       <div className="lg:h-[115px]   sm:h-[450px] w-full  overflow-hidden flex lg:flex-row flex-col lg:justify-center lg:items-start lg:space-x-2">
         <div className="imagevideo h-[200px] w-full md:h-[100%] lg:w-[45%]  lg:rounded overflow-hidden">
+  
           {
             video.Short == 1 ?
               <Link href={`/short`} style={{ textDecolation: "none" }}>
@@ -19,7 +36,7 @@ function Video({ video }) {
                   blurDataURL="data:image/png;base64,...(base64-encoded image data)" />
               </Link>
               :
-              <Link href={`/Watch?v=${video.uniid}`} style={{ textDecolation: "none" }}>
+              <Link href={online ? `/Watch?v=${video.uniid}` : `/${video.url}`} style={{ textDecolation: "none" }}>
                 <Image src={`${process.env.NEXT_PUBLIC_URL}/Thumbnails/${video.Image}`}
                   width={800} height={800}
                   className="w-[100%]  h-[100%] object-fit" alt="videos"
