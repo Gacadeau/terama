@@ -44,7 +44,7 @@ useEffect(() => {
   else{
    console.log('you are online');
    }
-},[online]);
+},[]);
 
   useEffect(() => {
     const handleRouteChange = (url) => {
