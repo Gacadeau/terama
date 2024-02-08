@@ -9,6 +9,22 @@ function Videos() {
   const router = useRouter()
   const [videos, setVideos] = useState([]);
   const [hasMore, setHasMore] = useState(true)
+  const [online, setOnline] = useState(true);
+
+  useEffect(()=>{
+    const handleOnlineStatusChange = () =>{
+      setOnline(navigator.onLine);
+    };
+    window.addEventListener('online',handleOnlineStatusChange);
+    window.addEventListener('offline',handleOnlineStatusChange);
+    setOnline(navigator.onLine);
+    return () =>{
+      window.removeEventListener('online' ,handleOnlineStatusChange);
+      window.removeEventListener('offline',handleOnlineStatusChange);
+    }
+
+  },[]);
+
   const getMoreVideos = async () => {
     const post = router.query.v
     const user = auto.session
