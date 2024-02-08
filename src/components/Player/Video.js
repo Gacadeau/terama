@@ -52,7 +52,7 @@ function Video({ video }) {
             <div className="videoName font-semibold lg:text-[18px] text-[18px]">{video.Title}</div>
             <div className="profilChannel  flex justify-start items-center space-x-2  cursor-pointer ">
               {
-                video.Photo ?
+                video.Photo && online?
                   <Image width={500} height={500} alt='profile'
                     className=" w-10  h-10 my-1 ml-15 rounded-full "
                     src={`${process.env.NEXT_PUBLIC_URL}/Thumbnails/${video.Photo}`}

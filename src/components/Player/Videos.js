@@ -12,7 +12,8 @@ function Videos() {
   const getMoreVideos = async () => {
     const post = router.query.v
     const user = auto.session
-    if (user === 'unlogged') {
+    if(online){
+    if (user === 'unlogged' ) {
       const res = await fetch(`/api/posts/videos/${post}/${videos.length}/6/${0}`)
       const newVideos = await res.json()
       if (newVideos.length == 0) setHasMore(false)
@@ -23,9 +24,10 @@ function Videos() {
       if (newVideos.length == 0) setHasMore(false)
       setVideos(videos => [...videos, ...newVideos])
     }
-
+  }
   }
   useEffect(() => {
+    if(online){
     const fetchVideos = async (post, user) => {
       const response = await fetch(`/api/posts/videos/${post}/0/7/${user} `);
       const data = await response.json();
@@ -41,6 +43,7 @@ function Videos() {
       }
 
     }
+  }
   }, [router, auto])
 
   return (
