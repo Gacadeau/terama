@@ -37,15 +37,15 @@ export default function App({ Component, pageProps }) {
 
   },[]);
 
-//useEffect(() => {
+useEffect(() => {
   
-//  if(!online){
-//    router.push('/downloads');
-// }
-// else{
-//    console.log('you are online');
-//  }
-//},[online]);
+  if(!online){
+  router.push('/downloads');
+  }
+  else{
+   console.log('you are online');
+   }
+},[online]);
 
   useEffect(() => {
     const handleRouteChange = (url) => {
