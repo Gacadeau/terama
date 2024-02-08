@@ -17,35 +17,79 @@ function UnDescribe ({ video }) {
   const [abonne, setAbonne] = useState(null)
   const [yesColor, setYesColor] = useState('bg-gray-200')
   const [noColor, setNoColor] = useState('bg-gray-200')
+  const [online, setOnline] = useState(true);
 
   const [buttonAimeColor, setButtonAimeColor] = useState('')
   const [buttonAimepasColor, setButtonAimepasColor] = useState('')
 
+  useEffect(()=>{
+    const handleOnlineStatusChange = () =>{
+      setOnline(navigator.onLine);
+    };
+    window.addEventListener('online',handleOnlineStatusChange);
+    window.addEventListener('offline',handleOnlineStatusChange);
+    setOnline(navigator.onLine);
+    return () =>{
+      window.removeEventListener('online' ,handleOnlineStatusChange);
+      window.removeEventListener('offline',handleOnlineStatusChange);
+    }
+
+  },[]);
+
   const video_Url = `https://terama.vercel.app/Videos/${video.Video}`;
 
-  const handleDownload = async ()=> {    
-    try {
-      const cache = await caches.open('video-cache')
-      const response = (await cache.match(video_Url)) || (await fetch(video_Url))
-      await cache.put(video_Url, response.clone())
-  
-      // Lire la vidéo depuis le cache
-      const blob = await cache.match(video_Url).then(res => res.blob())
-      const url = window.URL.createObjectURL(blob)
-  
-      // Créer un élément vidéo et jouer depuis le cache
-      const videoElement = document.createElement('video')
-      videoElement.src = url
-      //document.body.appendChild(videoElement)
-      //videoElement.play()
-    } catch (error) {
-      console.error('Erreur lors de la mise en cache de la vidéo :', error)
+  const handleDownload = async () => {  
+  console.log('video:',video);
+    if(online){
+      console.log('you are :',online);
+      try {
+        const registration = await navigator.serviceWorker.ready;
+        const response = await fetch(video_Url);
+        const blob = await response.blob();
+
+        registration.active.postMessage({
+          type: 'CACHE_VIDEO',
+          Body:video.Body,
+          Cat:video.Cat,
+          CatPage:video.CatPage,
+          Categorie:video.Categorie,
+          Category:video.Category,
+          Channel:video.Channel,
+          Cover:video.Cover,
+          Created_at:video.Created_at,    
+          Hours:video.Hours,        
+          ID:video.ID,
+          Image:video.Image,       
+          Likes:video.Likes, 
+          Mail:video.Mail, 
+          NextVideo:video.NextVideo, 
+          PageName:video.PageName, 
+          PageCreated:video.PageCreated,
+          Photo:video.Photo,
+          Short:video.Short,
+          Title:video.Title,
+          User:video.User,
+          UserId:video.UserId,
+          Uuid:video.Uuid,
+          Video:video.Video,
+          Views:video.Views,
+          Visible:video.Visible,
+          uniid:video.uniid,
+          url: video_Url,
+          blob,
+        });
+
+        console.log('Video ajoutée au cache avec succès.');
+      } catch (error) {
+        console.error('Erreur lors du téléchargement de la vidéo:', error);
+      }
     }
   };
 
   // test if liked api endpoint
   const fetchLikesReactions = useCallback(
     async id => {
+     if(online){
       const user = auto.session
       const response = await fetch(`/api/reactions/likes/${id}/${user.ID}`)
       const data = await response.json()
@@ -66,6 +110,7 @@ function UnDescribe ({ video }) {
           setLikes(data[0])
         }
       }
+     }
     },
     [auto.session]
   )
@@ -73,6 +118,7 @@ function UnDescribe ({ video }) {
   // channel sub begin
   const fetchSubReactions = useCallback(
     async user => {
+      if(online){
       const sub = auto.session
       const response = await fetch(`/api/reactions/subs/${user}/${sub.ID}`)
       const data = await response.json()
@@ -81,19 +127,23 @@ function UnDescribe ({ video }) {
       } else {
         setAbonne(true)
       }
-    },
-    [auto.session]
+    }
+    }, [auto.session]
   )
 
   useEffect(() => {
+    if(online){
     fetchLikesReactions(video.ID)
     fetchSubReactions(video.User)
+   }
   }, [auto, video, fetchLikesReactions, fetchSubReactions])
 
   //channel sub end
   useEffect(() => {
-    fetchLikesReactions(video.ID)
-    fetchSubReactions(video.User)
+    if(online){
+      fetchLikesReactions(video.ID)
+      fetchSubReactions(video.User)
+    }
   }, [auto, video, fetchLikesReactions, fetchSubReactions])
   //couleur boutton j'aime
   useEffect(() => {
