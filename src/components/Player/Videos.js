@@ -60,7 +60,7 @@ function Videos() {
 
     }
   }
-  }, [router, auto])
+  }, [router, auto,online])
 
   return (
     <>
