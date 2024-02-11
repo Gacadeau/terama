@@ -35,7 +35,6 @@ function Cached({ video }) {
     fetchProfile(video.Photo)
     fetchImage()
   }, [video])
-
   return (
     <>
       <div className="video1 flex flex-row w-full  justify-between md:px-6 mb-6 cursor-pointer ">
@@ -44,7 +43,8 @@ function Cached({ video }) {
 
             {
                 <Link href={`/Watch?v=${video.uniid}`}>
-                  <Image width={100} height={100} src={imageBlobUrl} className="w-full h-full object-cover" alt="profil" />
+                   
+                  <Image width={100} height={100} src={`${process.env.NEXT_PUBLIC_URL}/Thumbnails/${video.Image}`} className="w-full h-full object-cover" alt="profil" />
                 </Link>
             }
 
