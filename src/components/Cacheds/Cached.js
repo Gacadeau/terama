@@ -4,6 +4,21 @@ import Image from 'next/image'
 function Cached({ video }) {
   const [imageBlobUrl, setImageBlobUrl] = useState('/img/thumb.jpg');
   const [profBlobUrl, setProfBlobUrl] = useState('/img/logo.png');
+  const [online, setOnline] = useState(true);
+  useEffect(()=>{
+    const handleOnlineStatusChange = () =>{
+      setOnline(navigator.onLine);
+    };
+    window.addEventListener('online',handleOnlineStatusChange);
+    window.addEventListener('offline',handleOnlineStatusChange);
+    setOnline(navigator.onLine);
+    return () =>{
+      window.removeEventListener('online' ,handleOnlineStatusChange);
+      window.removeEventListener('offline',handleOnlineStatusChange);
+    }
+
+  },[]);
+
   useEffect(() => {
     const fetchImage = async () => {
       try {
@@ -43,8 +58,7 @@ function Cached({ video }) {
 
             {
                 <Link href={`/Watch?v=${video.uniid}`}>
-                   
-                  <Image width={100} height={100} src={`${process.env.NEXT_PUBLIC_URL}/Thumbnails/${video.Image}`} className="w-full h-full object-cover" alt="profil" />
+                  <Image width={100} height={100} src={online ? `${process.env.NEXT_PUBLIC_URL}/Thumbnails/${video.Image}`:`${video.video_Image }`} className="w-full h-full object-cover" alt="profil" />
                 </Link>
             }
 
@@ -54,7 +68,7 @@ function Cached({ video }) {
             <p className="text-sm md:text-base">{video.Body.split('\n').slice(0, 2).join('\n')}</p>
             <Link href={`/profile?c=${video.Uuid}`}>
               <div className="description flex items-center  text-sm">
-                <Image width={80} height={80} alt='profile' className="lg:w-10 w-8 lg:h-10 h-8 my-1 ml-15 rounded-full " src={profBlobUrl} />
+                <Image width={80} height={80} alt='profile' className="lg:w-10 w-8 lg:h-10 h-8 my-1 ml-15 rounded-full " src={`${process.env.NEXT_PUBLIC_URL}/Thumbnails/${video.Photo}`} />
                 <p className="nom ml-2" >{video.page}</p>
               </div>
             </Link>
