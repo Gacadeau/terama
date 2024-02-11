@@ -1,5 +1,7 @@
 const CACHE_NAME = 'mon-site-cache-v1';
 const cacheName = 'downloaded-videos-cache';
+const imageCacheName = 'downloaded-images-cache';
+const video_Metadata_Url = 'metadata-video';
 
 const urlsToCache = ['/downloads'];
 
@@ -11,7 +13,6 @@ self.addEventListener('install', (event) => {
   self.skipWaiting();
 });
 
-
 self.addEventListener('activate', (event) => {
   console.log('Service worker activated');
   event.waitUntil(self.clients.claim());
@@ -22,10 +23,6 @@ self.addEventListener('fetch', (event) => {
     event.respondWith(
       caches.match(event.request).then((response) => {
         return response || fetch(event.request).then((fetchedResponse) => {
-          //const responseClone = fetchedResponse.clone();
-	        // caches.open(cacheName).then((cache) => {
-          //   cache.put(event.request, responseClone);
-          // });
           console.log(`Video fetched: ${event.request.url}`);
           return fetchedResponse;
         });
@@ -44,40 +41,54 @@ self.addEventListener('message', (event) => {
   console.log('Message received:', event.data);
 
   if (event.data && event.data.type === 'CACHE_VIDEO') {
-    const { url, blob,video_Image, Body, Cat, CatPage, Categorie, Category,Channel,  Cover,Created_at, Hours, ID, Image, Likes,
-          Mail, NextVideo,PageName,PageCreated, Photo,Short,Title, User,UserId, Uuid,Video,Views,Visible, uniid } = event.data;
+    const { url, video_Image, metadata } = event.data;
     
-    const newUrl = 'https://terama.vercel.app/Watch?v=' + uniid;
+    const newUrl = 'https://terama.vercel.app/Watch?v=' + metadata.uniid;
     
-    const responseVideo = new Response(blob, {
-      headers: {
-        'Content-Disposition': `inline; filename=${Title}`,
-        'X-File-Info': JSON.stringify({ video_Image,Body, Cat, CatPage, Categorie, Category,Channel,  Cover,Created_at, Hours, ID, Image, Likes,
-          Mail, NextVideo,PageName,PageCreated, Photo,Short, User,UserId, Uuid,Video,Views,Visible, uniid }),
-      },
-    });
-
-    // Mettre en cache la vidéo dans cacheName
+    // Mise en cache de la vidéo
     caches.open(cacheName).then((cache) => {
-      cache.put(url, responseVideo);
+      cache.add(url);
       console.log(`Video cached: ${url}`);
     })
     .then(() => {
-      // Créer une nouvelle instance de Response pour la nouvelle URL
-      return fetch(newUrl).then((newResponse) => {
-        return new Promise((resolve) => {
-          const newResponseClone = newResponse.clone();
-          // Mettre en cache la nouvelle URL dans CACHE_NAME
-          caches.open(CACHE_NAME).then((cache) => {
-            cache.put(newUrl, newResponseClone);
-            console.log(`New URL cached: ${newUrl}`);
-            resolve();
+      // Mise en cache de l'image
+      fetch(video_Image)
+      .then((imageResponse) => {
+        if (!imageResponse.ok) {
+          throw new Error(`Failed to fetch image`);
+        }
+        return caches.open(imageCacheName)
+          .then((imageCache) => {
+            imageCache.put(video_Image, imageResponse.clone());
+            console.log('Image cached successfully.');
           });
-        });
+      })
+      .then(() => {
+        // Mise en cache des métadonnées de la vidéo
+        const metadataResponse = new Response(JSON.stringify(metadata));
+        return caches.open(CACHE_NAME)
+          .then((cache) => {
+            cache.put(video_Metadata_Url, metadataResponse);
+            console.log('Metadata cached successfully.');
+          });
+      })
+      .then(() => {
+        // Mise en cache de la nouvelle URL
+        return fetch(newUrl)
+          .then((newResponse) => {
+            return new Promise((resolve) => {
+              const newResponseClone = newResponse.clone();
+              caches.open(CACHE_NAME).then((cache) => {
+                cache.put(newUrl, newResponseClone);
+                console.log(`New URL cached: ${newUrl}`);
+                resolve();
+              });
+            });
+          });
+      })
+      .catch((error) => {
+        console.error('Cache error:', error);
       });
-    })
-    .catch((error) => {
-      console.error('Cache error:', error);
     });
   }
 });

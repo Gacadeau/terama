@@ -1,55 +1,55 @@
 // Dans votre composant React
 import React, { useState, useEffect } from 'react';
-import Cached from '../Cacheds/Cached'
+import Cached from '../Cacheds/Cached';
 
 const CachedVideos = () => {
   const [cachedVideos, setCachedVideos] = useState([]);
 
-const getVideoNameFromHeaders = (headers) => {
-  const contentDispositionHeader = headers.get('Content-Disposition');
-  if (contentDispositionHeader) {
-    const match = contentDispositionHeader.match(/filename=(.+)/);
-    if (match && match[1]) {
-      return decodeURIComponent(match[1]);
+  const getVideoNameFromHeaders = (headers) => {
+    const contentDispositionHeader = headers.get('Content-Disposition');
+    if (contentDispositionHeader) {
+      const match = contentDispositionHeader.match(/filename=(.+)/);
+      if (match && match[1]) {
+        return decodeURIComponent(match[1]);
+      }
     }
-  }
-  return 'Unknown';
-};
-
-const getFileInformationFromHeaders = (headers) => {
-  const fileInfoHeader = headers.get('X-File-Info');
-  if (fileInfoHeader) {
-    return JSON.parse(fileInfoHeader);
-  }
-  return {
-          video_Image:Unkown,
-          Body:Unknown,
-          Cat:Unknown,
-          CatPage:Unknown,
-          Categorie:Unknown,
-          Category:Unknown,
-          Channel:Unknown,
-          Cover:Unknown,
-          Created_at:Unknown,    
-          Hours:Unknown,        
-          ID:Unknown,
-          Image:Unknown,       
-          Likes:Unknown, 
-          Mail:Unknown, 
-          NextVideo:Unknown, 
-          PageName:Unknown, 
-          PageCreated:Unknown,
-          Photo:Unknown,
-          Short:Unknown,
-          User:Unknown,
-          UserId:Unknown,
-          Uuid:Unknown,
-          Video:Unknown,
-          Views:Unknown,
-          Visible:Unknown,
-          uniid:Unknown
+    return 'Unknown';
   };
-};
+
+  const getFileInformationFromHeaders = (headers) => {
+    const fileInfoHeader = headers.get('X-File-Info');
+    if (fileInfoHeader) {
+      return JSON.parse(fileInfoHeader);
+    }
+    return {
+      video_Image: 'Unknown',
+      Body: 'Unknown',
+      Cat: 'Unknown',
+      CatPage: 'Unknown',
+      Categorie: 'Unknown',
+      Category: 'Unknown',
+      Channel: 'Unknown',
+      Cover: 'Unknown',
+      Created_at: 'Unknown',    
+      Hours: 'Unknown',        
+      ID: 'Unknown',
+      Image: 'Unknown',       
+      Likes: 'Unknown', 
+      Mail: 'Unknown', 
+      NextVideo: 'Unknown', 
+      PageName: 'Unknown', 
+      PageCreated: 'Unknown',
+      Photo: 'Unknown',
+      Short: 'Unknown',
+      User: 'Unknown',
+      UserId: 'Unknown',
+      Uuid: 'Unknown',
+      Video: 'Unknown',
+      Views: 'Unknown',
+      Visible: 'Unknown',
+      uniid: 'Unknown'
+    };
+  };
 
 
   useEffect(() => {
@@ -68,12 +68,19 @@ const getFileInformationFromHeaders = (headers) => {
 
           const name = getVideoNameFromHeaders(response.headers);
           const fileInfo = getFileInformationFromHeaders(response.headers);
-          const videoBlob = await response.blob();
+          
+          // Convertir la réponse en JSON si elle n'est pas déjà au format JSON
+          let metadata = null;
+          try {
+            metadata = await response.json();
+          } catch (error) {
+            console.error('Error parsing JSON:', error);
+          }
 
-          return { url, name, blob: videoBlob, ...fileInfo };
+          return { url, name, ...fileInfo, ...metadata };
         });
 
-        // Wait for all promises to resolve
+        // Attendre que toutes les promesses se résolvent
         const videoInfoArray = await Promise.all(videoInfoPromises);
         setCachedVideos(videoInfoArray);
         console.log('videosloaded:', videoInfoArray);
@@ -83,7 +90,7 @@ const getFileInformationFromHeaders = (headers) => {
     };
 
     loadCachedVideos();
-  }, []); // Empty dependency array means this effect runs once after the initial render
+  }, []); // Le tableau de dépendances vide signifie que cet effet s'exécute une fois après le rendu initial
 
   console.log('videos1:', cachedVideos);
 
@@ -102,7 +109,7 @@ const getFileInformationFromHeaders = (headers) => {
       </div> 
 
     </>
- );
+  );
 };
 
 export default CachedVideos;

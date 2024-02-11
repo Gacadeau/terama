@@ -12,12 +12,12 @@ function VideoProvider(props) {
   const getVideoNameFromHeaders = (headers) => {
     const contentDispositionHeader = headers.get('Content-Disposition');
     if (contentDispositionHeader) {
-    const match = contentDispositionHeader.match(/filename=(.+)/);
-    if (match && match[1]) {
-       return decodeURIComponent(match[1]);
-     }
+      const match = contentDispositionHeader.match(/filename=(.+)/);
+      if (match && match[1]) {
+        return decodeURIComponent(match[1]);
+      }
     }
-   return 'Unknown';
+    return 'Unknown';
   };
 
   const getFileInformationFromHeaders = (headers) => {
@@ -31,79 +31,59 @@ function VideoProvider(props) {
       page: 'Unknown',
       profil: 'Unknown',
       create: 'Unknown',
-      Uuid: 'Unknown' ,
-      uniid: 'Unkown',
-   };
- };
+      Uuid: 'Unknown',
+      uniid: 'Unknown',
+    };
+  };
 
-  useEffect(()=>{
-    const handleOnlineStatusChange = () =>{
+  useEffect(() => {
+    const handleOnlineStatusChange = () => {
       setOnline(navigator.onLine);
     };
 
-    window.addEventListener('online',handleOnlineStatusChange);
-    window.addEventListener('offline',handleOnlineStatusChange);
+    window.addEventListener('online', handleOnlineStatusChange);
+    window.addEventListener('offline', handleOnlineStatusChange);
     setOnline(navigator.onLine);
-    return () =>{
-      window.removeEventListener('online' ,handleOnlineStatusChange);
-      window.removeEventListener('offline',handleOnlineStatusChange);
+
+    return () => {
+      window.removeEventListener('online', handleOnlineStatusChange);
+      window.removeEventListener('offline', handleOnlineStatusChange);
     }
+  }, []);
 
-  },[]);
-
-  // useEffect(() => {
-  //   async function fetchData(post, user) {
-  //     if(online){
-  //       const response = await fetch(`/api/posts/watch/${post}/0/${user}`);
-  //       const data = await response.json();
-  //       console.log('data:',data[0]);
-  //       if (data[0]) setVideo(data[0]);
-  //     } 
-  //   }
-  //   if (router.query.v && auto.session) {
-  //     if(auto.session === 'unlogged'){
-  //       fetchData(router.query.v, 0)
-  //     }else{
-  //       fetchData(router.query.v, auto.session.ID)
-  //     }
-  //   }
-  //   else{
-  //     console.log('Go to  downloads videos!')
-  //   }
-  // }, [router.query.v,auto,online]); // Ajout des dépendances router.query.v et auto.session
-  
   useEffect(() => {
     async function fetchData(post, user) {
       let data;
       if (online) {
-        console.log('online:', online);
-        const response = await fetch(`/api/posts/watch/${post}/0/${user}`);
-        data = await response.json();
-        console.log('dataonline:',data);
-      } else {
-        console.log('online:', online);
         try {
-          // Charger la liste des vidéos depuis le cache
+          console.log('online:', online);
+          const response = await fetch(`/api/posts/watch/${post}/0/${user}`);
+          data = await response.json();
+          console.log('dataonline:', data);
+        } catch (error) {
+          console.error('Error fetching video online:', error);
+        }
+      } else {
+        try {
+          console.log('online:', online);
           const cache = await caches.open('downloaded-videos-cache');
           const requests = await cache.keys();
-      
+
           const videoInfoPromises = requests.map(async (request, index) => {
             const url = request.url;
             const response = await cache.match(request);
-                
-            // Ajoutez ces lignes pour afficher la réponse du cache dans la console
+
             console.log('Cache Response:', response);
-      
+
             const name = getVideoNameFromHeaders(response.headers);
             const fileInfo = getFileInformationFromHeaders(response.headers);
             const videoBlob = await response.blob();
-      
+
             return { url, name, blob: videoBlob, ...fileInfo };
           });
-      
-          // Wait for all promises to resolve
+
           data = await Promise.all(videoInfoPromises);
-          console.log('dataoffline:',data);
+          console.log('dataoffline:', data);
         } catch (error) {
           console.error('Error loading cached videos:', error);
         }
@@ -112,7 +92,7 @@ function VideoProvider(props) {
         setVideo(data[0]);
       }
     }
-  
+
     if (router.query.v && auto.session) {
       if (auto.session === 'unlogged') {
         fetchData(router.query.v, 0);
