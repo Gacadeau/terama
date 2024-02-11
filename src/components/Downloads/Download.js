@@ -76,7 +76,7 @@ const getFileInformationFromHeaders = (headers) => {
         // Wait for all promises to resolve
         const videoInfoArray = await Promise.all(videoInfoPromises);
         setCachedVideos(videoInfoArray);
-        console.log('videos:', videoInfoArray);
+        console.log('videosloaded:', videoInfoArray);
       } catch (error) {
         console.error('Error loading cached videos:', error);
       }
