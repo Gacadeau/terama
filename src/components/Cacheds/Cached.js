@@ -58,7 +58,7 @@ function Cached({ video }) {
 
             {
                 <Link href={`/Watch?v=${video.uniid}`}>
-                  <Image width={100} height={100} src={online ? `${process.env.NEXT_PUBLIC_URL}/Thumbnails/${video.Image}`:`${video.video_Image }`} className="w-full h-full object-cover" alt="profil" />
+                  <Image width={100} height={100} src={online ? `${video.video_Image }`:`${video.video_Image }`} className="w-full h-full object-cover" alt="profil" />
                 </Link>
             }
 
