@@ -37,54 +37,56 @@ function UnDescribe ({ video }) {
   },[]);
 
   const video_Url = `https://terama.vercel.app/Videos/${video.Video}`;
+  const video_Image = `https://terama.vercel.app/Thumbnails/${video.Image}`;
 
   const handleDownload = async () => {  
-  console.log('video:',video);
-    if(online){
-      console.log('you are :',online);
-      try {
-        const registration = await navigator.serviceWorker.ready;
-        const response = await fetch(video_Url);
-        const blob = await response.blob();
-
-        registration.active.postMessage({
-          type: 'CACHE_VIDEO',
-          Body:video.Body,
-          Cat:video.Cat,
-          CatPage:video.CatPage,
-          Categorie:video.Categorie,
-          Category:video.Category,
-          Channel:video.Channel,
-          Cover:video.Cover,
-          Created_at:video.Created_at,    
-          Hours:video.Hours,        
-          ID:video.ID,
-          Image:video.Image,       
-          Likes:video.Likes, 
-          Mail:video.Mail, 
-          NextVideo:video.NextVideo, 
-          PageName:video.PageName, 
-          PageCreated:video.PageCreated,
-          Photo:video.Photo,
-          Short:video.Short,
-          Title:video.Title,
-          User:video.User,
-          UserId:video.UserId,
-          Uuid:video.Uuid,
-          Video:video.Video,
-          Views:video.Views,
-          Visible:video.Visible,
-          uniid:video.uniid,
-          url: video_Url,
-          blob,
-        });
-
-        console.log('Video ajoutée au cache avec succès.');
-      } catch (error) {
-        console.error('Erreur lors du téléchargement de la vidéo:', error);
+    console.log('video:',video);
+      if(online){
+        console.log('you are :',online);
+        try {
+          const registration = await navigator.serviceWorker.ready;
+          const response = await fetch(video_Url);
+          const blob = await response.blob();
+  
+          registration.active.postMessage({
+            type: 'CACHE_VIDEO',
+            video_Image:video_Image,
+            Body:video.Body,
+            Cat:video.Cat,
+            CatPage:video.CatPage,
+            Categorie:video.Categorie,
+            Category:video.Category,
+            Channel:video.Channel,
+            Cover:video.Cover,
+            Created_at:video.Created_at,    
+            Hours:video.Hours,        
+            ID:video.ID,
+            Image:video.Image,       
+            Likes:video.Likes, 
+            Mail:video.Mail, 
+            NextVideo:video.NextVideo, 
+            PageName:video.PageName, 
+            PageCreated:video.PageCreated,
+            Photo:video.Photo,
+            Short:video.Short,
+            Title:video.Title,
+            User:video.User,
+            UserId:video.UserId,
+            Uuid:video.Uuid,
+            Video:video.Video,
+            Views:video.Views,
+            Visible:video.Visible,
+            uniid:video.uniid,
+            url: video_Url,
+            blob,
+          });
+  
+          console.log('Video ajoutée au cache avec succès.');
+        } catch (error) {
+          console.error('Erreur lors du téléchargement de la vidéo:', error);
+        }
       }
-    }
-  };
+    };
 
   // test if liked api endpoint
   const fetchLikesReactions = useCallback(

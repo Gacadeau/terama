@@ -22,13 +22,7 @@ function Cached({ video }) {
   useEffect(() => {
     const fetchImage = async () => {
       try {
-        if(online){
-          const response = await fetch(`/Thumbnails/${video.Image}`);
-        }
-        else
-        {
-          const response = await fetch(`${video.video_Image}`);
-        }
+        const response = await fetch(`/Thumbnails/${video.Image}`);
         const blob = await response.blob();
         const blobUrl = URL.createObjectURL(blob);
         setImageBlobUrl(blobUrl);
@@ -55,7 +49,7 @@ function Cached({ video }) {
     };
     fetchProfile(video.Photo)
     fetchImage()
-  }, [video,online])
+  }, [video])
   return (
     <>
       <div className="video1 flex flex-row w-full  justify-between md:px-6 mb-6 cursor-pointer ">
@@ -64,7 +58,7 @@ function Cached({ video }) {
 
             {
                 <Link href={`/Watch?v=${video.uniid}`}>
-                  <Image width={100} height={100} src={imageBlobUrl} className="w-full h-full object-cover" alt="profil" />
+                  <Image width={100} height={100} src={online ? `${process.env.NEXT_PUBLIC_URL}/Thumbnails/${video.Image}`:`${video.video_Image }`} className="w-full h-full object-cover" alt="profil" />
                 </Link>
             }
 
