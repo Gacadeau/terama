@@ -3,6 +3,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 
 function Cached({ video }) {
+  console.log('video cache:',video)
   const [online, setOnline] = useState(true);
 
   useEffect(() => {
@@ -25,11 +26,11 @@ function Cached({ video }) {
       <div className="video1 flex flex-row w-full justify-between md:px-6 mb-6 cursor-pointer">
         <div className="flex flex-col m-0 md:flex-row h-[260px] md:h-[150px] bg-gray-100 space-x-1 md:space-x-5 w-[100%] md:w-[80%] md:rounded-2xl">
           <div className="w-full w-[250px] h-[210px] md:h-[130px] md:h-[150px] md:rounded-2xl overflow-hidden">
-            <Link href={`/Watch?v=${video.uniid}`}>
+            <Link href={`/Watch?v=${video.metadata.uniid}`}>
               <Image
                 width={100}
                 height={100}
-                src={online ? `/Thumbnails/${video.Image}` : video.video_Image}
+                src={online ? `/Thumbnails/${video.metadata.Image}` : video.video_Image}
                 className="w-full h-full object-cover"
                 alt="thumbnail"
               />
@@ -37,8 +38,8 @@ function Cached({ video }) {
           </div>
           <div className="flex flex-col">
             <h1 className="font-semibold text-[1rem] md:text-[1.5rem]">{video.name}</h1>
-            <p className="text-sm md:text-base">{video.Body.split('\n').slice(0, 2).join('\n')}</p>
-            <Link href={`/profile?c=${video.Uuid}`}>
+            <p className="text-sm md:text-base">{video.metadata.Body.split('\n').slice(0, 2).join('\n')}</p>
+            <Link href={`/profile?c=${video.metadata.Uuid}`}>
               <div className="description flex items-center text-sm">
                 <Image
                   width={80}

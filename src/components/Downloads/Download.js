@@ -60,7 +60,7 @@ const CachedVideos = () => {
         const requests = await cache.keys();
 
         const videoInfoPromises = requests.map(async (request, index) => {
-          const url = request.url;
+          const url = request.video_Url;
           const response = await cache.match(request);
           
           // Ajoutez ces lignes pour afficher la réponse du cache dans la console
@@ -91,7 +91,6 @@ const CachedVideos = () => {
 
     loadCachedVideos();
   }, []); // Le tableau de dépendances vide signifie que cet effet s'exécute une fois après le rendu initial
-
   console.log('videos1:', cachedVideos);
 
   return (
