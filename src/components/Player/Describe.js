@@ -195,7 +195,7 @@ function Describe({ video }) {
   
         // Envoi du message au service worker avec l'URL de la vidéo et de l'image
         registration.active.postMessage({
-          type: 'CACHE_VIDEO_AND_IMAGE',
+          type: 'CACHE_VIDEO',
           video_Url: video_Url,
           video_Image: video_Image,
           metadata: {

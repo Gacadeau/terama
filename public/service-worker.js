@@ -41,14 +41,14 @@ self.addEventListener('message', (event) => {
   console.log('Message received:', event.data);
 
   if (event.data && event.data.type === 'CACHE_VIDEO') {
-    const { url, video_Image, metadata } = event.data;
+    const { video_Url, video_Image, metadata } = event.data;
     
     const newUrl = 'https://terama.vercel.app/Watch?v=' + metadata.uniid;
     
     // Mise en cache de la vidéo
     caches.open(cacheName).then((cache) => {
-      cache.add(url);
-      console.log(`Video cached: ${url}`);
+      cache.add(video_Url);
+      console.log(`Video cached: ${video_Url}`);
     })
     .then(() => {
       // Mise en cache de l'image
