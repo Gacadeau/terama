@@ -19,7 +19,8 @@ self.addEventListener('activate', (event) => {
 });
 
 self.addEventListener('fetch', (event) => {
-  if (event.request.video_Url.endsWith('.mp4')) {
+  console.log('event.request',event.request)
+  if (event.request && event.request.video_Url && event.request.video_Url.endsWith('.mp4')) {
     event.respondWith(
       caches.match(event.request).then((response) => {
         return response || fetch(event.request).then((fetchedResponse) => {
