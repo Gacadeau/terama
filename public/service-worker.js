@@ -19,11 +19,11 @@ self.addEventListener('activate', (event) => {
 });
 
 self.addEventListener('fetch', (event) => {
-  if (event.request.url.endsWith('.mp4')) {
+  if (event.request.video_Url.endsWith('.mp4')) {
     event.respondWith(
       caches.match(event.request).then((response) => {
         return response || fetch(event.request).then((fetchedResponse) => {
-          console.log(`Video fetched: ${event.request.url}`);
+          console.log(`Video fetched: ${event.request.video_Url}`);
           return fetchedResponse;
         });
       })
@@ -48,7 +48,7 @@ self.addEventListener('message', (event) => {
     // Mise en cache de la vidéo
     caches.open(cacheName).then((cache) => {
       cache.add(video_Url);
-      console.log(`Video cached: ${url}`);
+      console.log(`Video cached: ${video_Url}`);
     })
     .then(() => {
       // Mise en cache de l'image
