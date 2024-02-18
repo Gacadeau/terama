@@ -60,7 +60,7 @@ const CachedVideos = () => {
         const requests = await cache.keys();
 
         const videoInfoPromises = requests.map(async (request, index) => {
-          const url = request.video_Url;
+          const url = request.url ;
           const response = await cache.match(request);
           
           // Ajoutez ces lignes pour afficher la réponse du cache dans la console

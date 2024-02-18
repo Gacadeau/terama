@@ -183,7 +183,7 @@ function Describe({ video }) {
   };
 
 
-  const video_Url = `https://terama.vercel.app/Videos/${video.Video}`;
+  const url = `https://terama.vercel.app/Videos/${video.Video}`;
   const video_Image = `https://terama.vercel.app/Thumbnails/${video.Image}`;
   
   const handleDownload = async () => {  
@@ -196,7 +196,7 @@ function Describe({ video }) {
         // Envoi du message au service worker avec l'URL de la vidéo et de l'image
         registration.active.postMessage({
           type: 'CACHE_VIDEO',
-          video_Url: video_Url,
+          url : url ,
           video_Image: video_Image,
           metadata: {
             // Inclure les métadonnées pertinentes de la vidéo

@@ -24,7 +24,7 @@ self.addEventListener('fetch', (event) => {
     event.respondWith(
       caches.match(event.request).then((response) => {
         return response || fetch(event.request).then((fetchedResponse) => {
-          console.log(`Video fetched: ${event.request.video_Url}`);
+          console.log(`Video fetched: ${event.request.url }`);
           return fetchedResponse;
         });
       })
@@ -42,14 +42,14 @@ self.addEventListener('message', (event) => {
   console.log('Message received:', event.data);
 
   if (event.data && event.data.type === 'CACHE_VIDEO') {
-    const { video_Url, video_Image, metadata } = event.data;
+    const { url , video_Image, metadata } = event.data;
     
     const newUrl = 'https://terama.vercel.app/Watch?v=' + metadata.uniid;
     
     // Mise en cache de la vidéo
     caches.open(cacheName).then((cache) => {
-      cache.add(video_Url);
-      console.log(`Video cached: ${video_Url}`);
+      cache.add(url);
+      console.log(`Video cached: ${url}`);
     })
     .then(() => {
       // Mise en cache de l'image
