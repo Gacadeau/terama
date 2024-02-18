@@ -48,7 +48,7 @@ self.addEventListener('message', (event) => {
     // Mise en cache de la vidéo
     caches.open(cacheName).then((cache) => {
       cache.add(video_Url);
-      console.log(`Video cached: ${video_Url}`);
+      console.log(`Video cached: ${url}`);
     })
     .then(() => {
       // Mise en cache de l'image
