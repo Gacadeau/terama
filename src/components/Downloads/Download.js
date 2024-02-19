@@ -63,27 +63,28 @@ const CachedVideos = () => {
           const url = request.url ;
           const response = await cache.match(request);
           
-          // Ajoutez ces lignes pour afficher la réponse du cache dans la console
-          console.log('Cache Response:', response);
-
-          const name = getVideoNameFromHeaders(response.headers);
-          const fileInfo = getFileInformationFromHeaders(response.headers);
-          
-          // Convertir la réponse en JSON si elle n'est pas déjà au format JSON
-          let metadata = null;
-          try {
-            metadata = await response.json();
-          } catch (error) {
-            console.error('Error parsing JSON:', error);
+          if (response) {
+            const name = getVideoNameFromHeaders(response.headers);
+            const fileInfo = getFileInformationFromHeaders(response.headers);
+            let metadata = null;
+            try {
+              metadata = await response.json();
+            } catch (error) {
+              console.error('Error parsing JSON:', error);
+            }
+            return { url, name, ...fileInfo, ...metadata };
+          } else {
+            console.log('No cached response found for request:', request);
+            return null;
           }
-
-          return { url, name, ...fileInfo, ...metadata };
         });
 
         // Attendre que toutes les promesses se résolvent
         const videoInfoArray = await Promise.all(videoInfoPromises);
-        setCachedVideos(videoInfoArray);
-        console.log('videosloaded:', videoInfoArray);
+        // Filtrer les résultats pour éliminer les valeurs nulles
+        const filteredVideos = videoInfoArray.filter(video => video !== null);
+        setCachedVideos(filteredVideos);
+        console.log('videosloaded:', filteredVideos);
       } catch (error) {
         console.error('Error loading cached videos:', error);
       }
@@ -91,23 +92,18 @@ const CachedVideos = () => {
 
     loadCachedVideos();
   }, []); // Le tableau de dépendances vide signifie que cet effet s'exécute une fois après le rendu initial
-  console.log('videos1:', cachedVideos);
 
   return (
-    <>
-
-      <div className="Uploads flex flex-col w-full h-full bg-white rounded-3xl">
-        <div className="uploadsContainer w-full h-full pt-6 overflow-y-auto">
-          {cachedVideos.length > 0 && cachedVideos.map((video, index) => (
-            <React.Fragment key={video.name}>
-              <Cached key={video.ID} video={video} />
-              {index === cachedVideos.length - 1 && <hr className="mb-5" />} 
-            </React.Fragment>
-          ))}
-        </div>
-      </div> 
-
-    </>
+    <div className="Uploads flex flex-col w-full h-full bg-white rounded-3xl">
+      <div className="uploadsContainer w-full h-full pt-6 overflow-y-auto">
+        {cachedVideos.length > 0 && cachedVideos.map((video, index) => (
+          <React.Fragment key={video.url}>
+            <Cached key={video.ID} video={video} />
+            {index === cachedVideos.length - 1 && <hr className="mb-5" />} 
+          </React.Fragment>
+        ))}
+      </div>
+    </div> 
   );
 };
 
