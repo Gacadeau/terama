@@ -48,7 +48,12 @@ self.addEventListener('message', (event) => {
     
     // Mise en cache de la vidéo
     caches.open(cacheName).then((cache) => {
-      cache.add(url);
+      const response = new Response({
+        headers: {
+          'X-File-Info': JSON.stringify(metadata) // Utilisation de l'objet metadata
+        }
+      });
+      cache.put(url, response);
       console.log(`Video cached: ${url}`);
     })
     .then(() => {
@@ -70,7 +75,7 @@ self.addEventListener('message', (event) => {
         return caches.open(CACHE_NAME)
           .then((cache) => {
             cache.put(video_Metadata_Url, metadataResponse);
-            console.log('Metadata cached successfully.');
+            console.log('Metadata cached successfully.',metadataResponse );
           });
       })
       .then(() => {

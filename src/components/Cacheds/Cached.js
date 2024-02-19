@@ -30,7 +30,7 @@ function Cached({ video }) {
               <Image
                 width={100}
                 height={100}
-                src={online ? `/Thumbnails/${video.metadata.Image}` : video.video_Image}
+                src={online ? `/Thumbnails/${video.Image}` : video.video_Image}
                 className="w-full h-full object-cover"
                 alt="thumbnail"
               />
@@ -39,16 +39,16 @@ function Cached({ video }) {
           <div className="flex flex-col">
             <h1 className="font-semibold text-[1rem] md:text-[1.5rem]">{video.name}</h1>
             <p className="text-sm md:text-base">{video.metadata.Body.split('\n').slice(0, 2).join('\n')}</p>
-            <Link href={`/profile?c=${video.metadata.Uuid}`}>
+            <Link href={`/profile?c=${video.Uuid}`}>
               <div className="description flex items-center text-sm">
                 <Image
                   width={80}
                   height={80}
                   alt="profile"
                   className="lg:w-10 w-8 lg:h-10 h-8 my-1 ml-15 rounded-full"
-                  src={`/Thumbnails/${video.Photo}`}
+                  src={`/Thumbnails/${video.metadata.Photo}`}
                 />
-                <p className="nom ml-2">{video.page}</p>
+                <p className="nom ml-2">{video.metadata.page}</p>
               </div>
             </Link>
           </div>
