@@ -33,11 +33,11 @@ const CachedVideos = () => {
       try {
         const cache = await caches.open('downloaded-videos-cache');
         const requests = await cache.keys();
-
-        const videoInfoPromises = requests.map(async (request) => {
+    
+        const videoInfoPromises = requests.filter(request => request.url.endsWith('.mp4')).map(async (request) => {
           const url = request.url;
           const response = await cache.match(request);
-
+    
           if (response) {
             const name = getVideoNameFromHeaders(response.headers);
             const fileInfo = await getFileInformationFromCache(response);
@@ -47,7 +47,7 @@ const CachedVideos = () => {
             return null;
           }
         });
-
+    
         const videoInfoArray = await Promise.all(videoInfoPromises);
         const filteredVideos = videoInfoArray.filter(video => video !== null);
         setCachedVideos(filteredVideos);
@@ -56,6 +56,7 @@ const CachedVideos = () => {
         console.error('Error loading cached videos:', error);
       }
     };
+    
 
     loadCachedVideos();
   }, []);
