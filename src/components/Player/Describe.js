@@ -183,59 +183,56 @@ function Describe({ video }) {
   };
 
 
-  const url = `https://terama.vercel.app/Videos/${video.Video}`;
-  const video_Image = `https://terama.vercel.app/Thumbnails/${video.Image}`;
-  
-  const handleDownload = async () => {  
-    console.log('video:', video);
-    if (online) {
-      console.log('you are online:', online);
-      try {
-        const registration = await navigator.serviceWorker.ready;
-  
-        // Envoi du message au service worker avec l'URL de la vidéo et de l'image
-        registration.active.postMessage({
-          type: 'CACHE_VIDEO',
-          url : url ,
-          video_Image: video_Image,
-          metadata: {
-            // Inclure les métadonnées pertinentes de la vidéo
-            Body: video.Body,
-            Cat: video.Cat,
-            CatPage: video.CatPage,
-            Categorie: video.Categorie,
-            Category: video.Category,
-            Channel: video.Channel,
-            Cover: video.Cover,
-            Created_at: video.Created_at,    
-            Hours: video.Hours,        
-            ID: video.ID,
-            Image: video.Image,       
-            Likes: video.Likes, 
-            Mail: video.Mail, 
-            NextVideo: video.NextVideo, 
-            PageName: video.PageName, 
-            PageCreated: video.PageCreated,
-            Photo: video.Photo,
-            Short: video.Short,
-            Title: video.Title,
-            User: video.User,
-            UserId: video.UserId,
-            Uuid: video.Uuid,
-            Video: video.Video,
-            Views: video.Views,
-            Visible: video.Visible,
-            uniid: video.uniid,
-          }
-        });
-  
-        console.log('Video and image added to cache successfully.');
-      } catch (error) {
-        console.error('Error downloading video or image:', error);
-      }
+const url = `https://terama.vercel.app/Videos/${video.Video}`;
+const video_Image = `https://terama.vercel.app/Thumbnails/${video.Image}`;
+
+const handleDownload = async () => {
+  console.log('video:', video);
+  if (online) {
+    console.log('you are online:', online);
+    try {
+      const registration = await navigator.serviceWorker.ready;
+
+      // Envoi du message au service worker avec toutes les données du vidéo
+      registration.active.postMessage({
+        type: 'CACHE_VIDEO',
+        url: url,
+        video_Image: video_Image,
+        Body: video.Body,
+        Cat: video.Cat,
+        CatPage: video.CatPage,
+        Categorie: video.Categorie,
+        Category: video.Category,
+        Channel: video.Channel,
+        Cover: video.Cover,
+        Created_at: video.Created_at,    
+        Hours: video.Hours,        
+        ID: video.ID,
+        Image: video.Image,       
+        Likes: video.Likes, 
+        Mail: video.Mail, 
+        NextVideo: video.NextVideo, 
+        PageName: video.PageName, 
+        PageCreated: video.PageCreated,
+        Photo: video.Photo,
+        Short: video.Short,
+        Title: video.Title,
+        User: video.User,
+        UserId: video.UserId,
+        Uuid: video.Uuid,
+        Video: video.Video,
+        Views: video.Views,
+        Visible: video.Visible,
+        uniid: video.uniid,
+      });
+
+      console.log('Video and image added to cache successfully.');
+    } catch (error) {
+      console.error('Error downloading video or image:', error);
     }
-  };
-  
+  }
+};
+
   
   
   const shareOnFacebook = () => {

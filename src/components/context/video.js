@@ -54,17 +54,13 @@ function VideoProvider(props) {
   useEffect(() => {
     async function fetchData(post, user) {
       let data;
-      if (online) {
-        try {
+      try {
+        if (online) {
           console.log('online:', online);
           const response = await fetch(`/api/posts/watch/${post}/0/${user}`);
           data = await response.json();
           console.log('dataonline:', data);
-        } catch (error) {
-          console.error('Error fetching video online:', error);
-        }
-      } else {
-        try {
+        } else {
           console.log('online:', online);
           const cache = await caches.open('downloaded-videos-cache');
           const requests = await cache.keys();
@@ -84,12 +80,13 @@ function VideoProvider(props) {
 
           data = await Promise.all(videoInfoPromises);
           console.log('dataoffline:', data);
-        } catch (error) {
-          console.error('Error loading cached videos:', error);
         }
-      }
-      if (data && data[0]) {
-        setVideo(data[0]);
+
+        if (data && data[0]) {
+          setVideo(data[0]);
+        }
+      } catch (error) {
+        console.error('Error fetching video:', error);
       }
     }
 
