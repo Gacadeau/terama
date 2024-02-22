@@ -19,6 +19,17 @@ function VideoProvider(props) {
     }
     return 'Unknown';
   };
+ const getFileInformationFromCache = async (response) => {
+    let fileInfo = {};
+    try {
+      const responseData = await response.clone().json();
+      fileInfo = responseData;
+    } catch (error) {
+      console.error('Error parsing JSON:', error);
+      // Handle non-JSON data differently if needed
+    }
+    return fileInfo;
+  };
 
   const getFileInformationFromHeaders = (headers) => {
     const fileInfoHeader = headers.get('X-File-Info');
@@ -64,18 +75,17 @@ function VideoProvider(props) {
           console.log('online:', online);
           const cache = await caches.open('downloaded-videos-cache');
           const requests = await cache.keys();
+          
+          const videoInfoPromises = requests.map(async (request) => {
+          const url = request.url;
+          const response = await cache.match(request);
 
-          const videoInfoPromises = requests.map(async (request, index) => {
-            const url = request.url;
-            const response = await cache.match(request);
+          console.log('Cache Response:', response);
 
-            console.log('Cache Response:', response);
-
-            const name = getVideoNameFromHeaders(response.headers);
-            const fileInfo = getFileInformationFromHeaders(response.headers);
-            const videoBlob = await response.blob();
-
-            return { url, name, blob: videoBlob, ...fileInfo };
+          const headers = response.headers;
+          const name = getVideoNameFromHeaders(headers);
+          const fileInfo = await getFileInformationFromCache(response);
+          return { url, name, ...fileInfo };
           });
 
           data = await Promise.all(videoInfoPromises);
