@@ -1,6 +1,5 @@
 const CACHE_NAME = 'mon-site-cache-v1';
 const cacheName = 'downloaded-videos-cache';
-const imageCacheName = 'downloaded-images-cache';
 
 const urlsToCache = ['/downloads'];
 
@@ -78,11 +77,13 @@ self.addEventListener('message', (event) => {
       console.log(`URL cached: ${newUrl}`);
     });
 
-
     // Mise en cache de la vidéo
     caches.open(cacheName).then((cache) => {
-      // Cachez l'URL de la vidéo
-      cache.add(url);
+      // Cachez l'URL de la vidéo avec le bon type de contenu
+      const videoResponse = new Response(null, {
+        headers: { 'Content-Type': 'video/mp4' }
+      });
+      cache.put(url, videoResponse);
       console.log(`Video cached: ${url}`);
 
       // Cachez l'image du vidéo
