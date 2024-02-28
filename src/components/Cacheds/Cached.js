@@ -25,7 +25,7 @@ function Cached({ video }) {
   useEffect(() => {
     const getThumbnailFromCache = async () => {
       try {
-        const cache = await caches.open('thumbnail-cache');
+        const cache = await caches.open('downloaded-videos-cache');
         const response = await cache.match(`/Thumbnails/${video.Image}`);
         if (response) {
           const blob = await response.blob();
