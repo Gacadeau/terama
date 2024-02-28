@@ -61,7 +61,7 @@ function Cached({ video }) {
     }
   };
 
-  const watchVideoLink = online ? `/Watch?v=${video.uniid}` : {videoUrl};
+  const watchVideoLink = online ? `/Watch?v=${video.uniid}` : videoUrl;
 
   return (
     <>
