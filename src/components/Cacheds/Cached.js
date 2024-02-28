@@ -6,6 +6,7 @@ function Cached({ video }) {
   console.log('video cache:', video);
   const [online, setOnline] = useState(true);
   const [thumbnailUrl, setThumbnailUrl] = useState(null);
+  const [videoUrl, setVideoUrl] = useState(null); 
 
   useEffect(() => {
     const handleOnlineStatusChange = () => {
@@ -49,6 +50,7 @@ function Cached({ video }) {
         if (response) {
           const blob = await response.blob();
           const videoUrl = URL.createObjectURL(blob);
+          setVideoUrl(videoUrl);
           // Maintenant, vous pouvez lire la vidéo à partir de videoUrl
           console.log('Video URL:', videoUrl);
           // Mettez en œuvre votre propre logique pour lire la vidéo ici
@@ -59,12 +61,15 @@ function Cached({ video }) {
     }
   };
 
+  const watchVideoLink = online ? `/Watch?v=${video.uniid}` : {videoUrl};
+
   return (
     <>
       <div className="video1 flex flex-row w-full justify-between md:px-6 mb-6 cursor-pointer" onClick={handlePlayVideo}>
         <div className="flex flex-col m-0 md:flex-row h-[260px] md:h-[150px] bg-gray-100 space-x-1 md:space-x-5 w-[100%] md:w-[80%] md:rounded-2xl">
           <div className="w-full w-[250px] h-[210px] md:h-[130px] md:h-[150px] md:rounded-2xl overflow-hidden">
-            <Link href={`/Watch?v=${video.uniid}`}>
+           
+            <Link href={watchVideoLink}>
               {thumbnailUrl ? (
                 <Image
                   width={100}
