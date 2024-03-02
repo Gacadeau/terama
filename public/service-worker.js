@@ -1,13 +1,8 @@
 const CACHE_NAME = 'mon-site-cache-v1';
 const cacheName = 'downloaded-videos-cache';
 
-const urlsToCache = ['/downloads'];
-
 self.addEventListener('install', (event) => {
   console.log('Service worker installed');
-  event.waitUntil(
-    caches.open(CACHE_NAME).then((cache) => cache.addAll(urlsToCache))
-  );
   self.skipWaiting();
 });
 
@@ -71,11 +66,6 @@ self.addEventListener('message', (event) => {
     } = event.data;
 
     const newUrl = 'https://terama.vercel.app/Watch?v=' + uniid;
-
-    caches.open(CACHE_NAME).then((cache) => {
-      cache.add(newUrl);
-      console.log(`URL cached: ${newUrl}`);
-    });
 
     // Mise en cache de la vidéo
     caches.open(cacheName).then((cache) => {
