@@ -35,102 +35,6 @@ self.addEventListener('fetch', (event) => {
   }
 });
 
-// self.addEventListener('message', (event) => {
-//   console.log('Message received:', event.data);
-
-//   if (event.data && event.data.type === 'CACHE_VIDEO') {
-//     const { 
-//       url, 
-//       video_Image, 
-//       Body, 
-//       Cat, 
-//       CatPage, 
-//       Categorie, 
-//       Category, 
-//       Channel, 
-//       Cover, 
-//       Created_at,    
-//       Hours,        
-//       ID, 
-//       Image,       
-//       Likes, 
-//       Mail, 
-//       NextVideo, 
-//       PageName, 
-//       PageCreated,
-//       Photo,
-//       Short,
-//       Title,
-//       User,
-//       UserId,
-//       Uuid,
-//       Video,
-//       Views,
-//       Visible,
-//       uniid
-//     } = event.data;
-
-//     const newUrl = 'http://localhost:3000/Watch?v=' + uniid;
-
-//     caches.open(CACHE_NAME).then((cache) => {
-//       cache.add(newUrl);
-//       console.log(`URL cached: ${newUrl}`);
-//     });
-
-//     // Mise en cache de la vidéo
-//     caches.open(cacheName).then((cache) => {
-//       // Cachez l'URL de la vidéo avec le bon type de contenu
-//       const videoResponse = new Response(null, {
-//         headers: { 'Content-Type': 'video/mp4' }
-//       });
-//       cache.put(url, videoResponse);
-//       console.log(`Video cached: ${url}`);
-
-//       // Cachez l'image du vidéo
-//       fetch(video_Image).then((response) => {
-//         cache.put(video_Image, response.clone());
-//         console.log('Image cached successfully.');
-//       });
-
-//       // Création d'un objet contenant toutes les données du vidéo
-//       const videoCacheData = {
-//         Body,
-//         Cat,
-//         CatPage,
-//         Categorie,
-//         Category,
-//         Channel,
-//         Cover,
-//         Created_at,
-//         Hours,
-//         ID,
-//         Image,
-//         Likes,
-//         Mail,
-//         NextVideo,
-//         PageName,
-//         PageCreated,
-//         Photo,
-//         Short,
-//         Title,
-//         User,
-//         UserId,
-//         Uuid,
-//         Video,
-//         Views,
-//         Visible,
-//         uniid
-//       };
-
-//       // Cachez les données du vidéo
-//       cache.put(url, new Response(JSON.stringify(videoCacheData)));
-//       console.log('Video data cached successfully.');
-//     }).catch((error) => {
-//       console.error('Cache error:', error);
-//     });
-//   }
-// });
-
 self.addEventListener('message', (event) => {
   console.log('Message received:', event.data);
 
@@ -168,13 +72,19 @@ self.addEventListener('message', (event) => {
 
     const newUrl = 'https://terama.vercel.app/Watch?v=' + uniid;
 
+    caches.open(CACHE_NAME).then((cache) => {
+      cache.add(newUrl);
+      console.log(`URL cached: ${newUrl}`);
+    });
+
+    // Mise en cache de la vidéo
     caches.open(cacheName).then((cache) => {
       // Cachez l'URL de la vidéo avec le bon type de contenu
       const videoResponse = new Response(null, {
         headers: { 'Content-Type': 'video/mp4' }
       });
       cache.put(url, videoResponse);
-      console.log(`URL and video cached: ${newUrl}`);
+      console.log(`Video cached: ${url}`);
 
       // Cachez l'image du vidéo
       fetch(video_Image).then((response) => {
@@ -213,8 +123,7 @@ self.addEventListener('message', (event) => {
       };
 
       // Cachez les données du vidéo
-      const cacheKey = `${url}-data`; // Utilisation d'une clé unique
-      cache.put(cacheKey, new Response(JSON.stringify(videoCacheData)));
+      cache.put(url, new Response(JSON.stringify(videoCacheData)));
       console.log('Video data cached successfully.');
     }).catch((error) => {
       console.error('Cache error:', error);
