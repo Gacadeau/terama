@@ -71,6 +71,9 @@ function VideoProvider(props) {
           const response = await fetch(`/api/posts/watch/${post}/0/${user}`);
           data = await response.json();
           console.log('dataonline:', data);
+          if (data && data[0]) {
+            setVideo(data[0]);
+          }
         } else {
           console.log('online:', online);
           const cache = await caches.open('downloaded-videos-cache');
@@ -90,10 +93,6 @@ function VideoProvider(props) {
 
           data = await Promise.all(videoInfoPromises);
           console.log('dataoffline:', data);
-        }
-
-        if (data && data[0]) {
-          setVideo(data[0]);
         }
       } catch (error) {
         console.error('Error fetching video:', error);
