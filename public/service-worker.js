@@ -83,12 +83,12 @@ self.addEventListener('message', (event) => {
       const videoResponse = new Response(null, {
         headers: { 'Content-Type': 'video/mp4' }
       });
-      cache.add(url, videoResponse); // Remplacement de put par add
+      cache.put(url, videoResponse);
       console.log(`Video cached: ${url}`);
 
       // Cachez l'image du vidéo
       fetch(video_Image).then((response) => {
-        cache.add(video_Image, response.clone()); // Remplacement de put par add
+        cache.put(video_Image, response.clone());
         console.log('Image cached successfully.');
       });
 
@@ -123,7 +123,7 @@ self.addEventListener('message', (event) => {
       };
 
       // Cachez les données du vidéo
-      cache.add(url, new Response(JSON.stringify(videoCacheData))); // Remplacement de put par add
+      cache.put(url, new Response(JSON.stringify(videoCacheData)));
       console.log('Video data cached successfully.');
     }).catch((error) => {
       console.error('Cache error:', error);
