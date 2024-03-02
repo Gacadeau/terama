@@ -93,7 +93,7 @@ function VideoProvider(props) {
         }
 
         if (data && data[0]) {
-          setVideo(data);
+          setVideo(data[0]);
         }
       } catch (error) {
         console.error('Error fetching video:', error);
