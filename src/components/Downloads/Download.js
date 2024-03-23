@@ -15,7 +15,7 @@ const CachedVideos = () => {
           const videoInfo = JSON.parse(await response.text());
           return videoInfo
         }));
-        setCachedVideos(videos)
+        setCachedVideos([...videos].reverse())
       } catch (error) {
           console.error('Error loading cached videos:', error);
         }
@@ -23,28 +23,6 @@ const CachedVideos = () => {
       getCachedVideos()
   }, []);
 
-  const getVideoNameFromHeaders = (headers) => {
-    const contentDispositionHeader = headers.get('Content-Disposition');
-    if (contentDispositionHeader) {
-      const match = contentDispositionHeader.match(/filename=(.+)/);
-      if (match && match[1]) {
-        return decodeURIComponent(match[1]);
-      }
-    }
-    return 'Unknown';
-  };
-
-  const getFileInformationFromCache = async (response) => {
-    let fileInfo = {};
-    try {
-      const responseData = await response.clone().json();
-      fileInfo = responseData;
-    } catch (error) {
-      console.error('Error parsing JSON:', error);
-      // Handle non-JSON data differently if needed
-    }
-    return fileInfo;
-  };
 
   return (
     <div className="Uploads flex flex-col w-full h-full bg-white rounded-3xl">
