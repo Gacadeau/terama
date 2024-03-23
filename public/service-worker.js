@@ -73,11 +73,14 @@ self.addEventListener('message', (event) => {
 
     const newUrl = 'https://terama.vercel.app:3000/Watch?v=' + uniid;
 
-    caches.open(CACHE_NAME).then((cache) => {
-      cache.add(newUrl);
-      console.log(`URL cached: ${newUrl}`);
-    });
-
+    caches.open(CACHE_NAME).then(async(cache) => {
+      return cache.add(newUrl).then(() => {
+        console.log(`URL cached: ${newUrl}`);
+      }); // Resolve promise after cache.add
+    }).then(() => {
+      console.log(`URL cached successfull: ${newUrl}`);
+    }); // waitUntil after cache.add
+    
     // Cache the video with correct Content-Type
     caches.open(cacheName).then(async (cache) => {
       try {
