@@ -3,40 +3,24 @@ import Cached from '../Cacheds/Cached';
 
 const CachedVideos = () => {
   const [cachedVideos, setCachedVideos] = useState([]);
-
   useEffect(() => {
-    const loadCachedVideos = async () => {
-      try {
-        const cache = await caches.open('downloaded-videos-cache');
-        const requests = await cache.keys();
-        
-        const videoInfoPromises = requests.map(async (request) => {
-          const url = request.url;
-          const response = await cache.match(request);
-
-          if (response) {
-            const headers = response.headers;
-            const name = getVideoNameFromHeaders(headers);
-            const fileInfo = await getFileInformationFromCache(response);
-            return { url, name, ...fileInfo };
-          } else {
-            console.log('No cached response found for request:', request);
-            return null;
-          }
-        });
-
-        const videoInfoArray = await Promise.all(videoInfoPromises);
-        const filteredVideos = videoInfoArray.filter(video => video !== null && video.url.endsWith('.mp4') );
-
-       // const filteredVideos = videoInfoArray.filter(video => video !== null);
-        setCachedVideos(filteredVideos);
-        console.log('Videos loaded:', filteredVideos);
+    const cacheName = 'downloaded-videos-cache';
+      const getCachedVideos= async () => {
+        try {
+        const cache = await caches.open(cacheName);
+        const keys = await cache.keys();
+        const videoUrls = Array.from(keys).filter((key) =>key.url.endsWith('_data'));
+        const videos = await Promise.all(videoUrls.map(async (url) => {
+          const response = await cache.match(url);
+          const videoInfo = JSON.parse(await response.text());
+          return videoInfo
+        }));
+        setCachedVideos(videos)
       } catch (error) {
-        console.error('Error loading cached videos:', error);
+          console.error('Error loading cached videos:', error);
+        }
       }
-    };
-
-    loadCachedVideos();
+      getCachedVideos()
   }, []);
 
   const getVideoNameFromHeaders = (headers) => {
