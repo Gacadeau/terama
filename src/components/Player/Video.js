@@ -40,7 +40,7 @@ function Video({ video }) {
       getThumbnailFromCache();
     }
   }, [online, video]);
-console.log('video',video);
+console.log('video',thumbnailUrl);
   return (
     <>
       <div className="lg:h-[115px]   sm:h-[450px] w-full  overflow-hidden flex lg:flex-row flex-col lg:justify-center lg:items-start lg:space-x-2">
