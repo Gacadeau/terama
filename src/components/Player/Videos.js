@@ -44,6 +44,7 @@ function Videos() {
   }
   useEffect(() => {
     if(online){
+      console.log('online',online);
     const fetchVideos = async (post, user) => {
       const response = await fetch(`/api/posts/videos/${post}/0/7/${user} `);
       const data = await response.json();
@@ -59,6 +60,25 @@ function Videos() {
       }
 
     }
+  }else{
+      const cacheName = 'downloaded-videos-cache';
+        const getCachedVideos= async () => {
+          try {
+          const cache = await caches.open(cacheName);
+          const keys = await cache.keys();
+          const videoUrls = Array.from(keys).filter((key) =>key.url.endsWith('_data'));
+          const videos = await Promise.all(videoUrls.map(async (url) => {
+            const response = await cache.match(url);
+            const videoInfo = JSON.parse(await response.text());
+            return videoInfo
+          }));
+          setVideos([...videos].reverse())
+        } catch (error) {
+            console.error('Error loading cached videos:', error);
+          }
+        }
+        getCachedVideos()
+    
   }
   }, [router, auto,online])
 
