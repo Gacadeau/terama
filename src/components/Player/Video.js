@@ -5,7 +5,6 @@ import { usePeriod } from '../Hooks/usePeriod'
 import { useState,useEffect } from 'react'
 
 function Video({ video }) {
-  console.log('playedVideo:',video);
   const [online, setOnline] = useState(true);
   const period = usePeriod(video.Created_at)
 
@@ -22,7 +21,7 @@ function Video({ video }) {
     }
 
   },[]);
-
+console.log('video',video);
   return (
     <>
       <div className="lg:h-[115px]   sm:h-[450px] w-full  overflow-hidden flex lg:flex-row flex-col lg:justify-center lg:items-start lg:space-x-2">
@@ -38,7 +37,7 @@ function Video({ video }) {
                   blurDataURL="data:image/png;base64,...(base64-encoded image data)" />
               </Link>
               :
-              <Link href={online ? `/Watch?v=${video.uniid}` : `/${video.url}`} style={{ textDecolation: "none" }}>
+              <Link href={online ? `/Watch?v=${video.uniid}` : `${process.env.NEXT_PUBLIC_URL}/${video.url}`} style={{ textDecolation: "none" }}>
                 <Image src={`${process.env.NEXT_PUBLIC_URL}/Thumbnails/${video.Image}`}
                   width={800} height={800}
                   className="w-[100%]  h-[100%] object-fit" alt="videos"
