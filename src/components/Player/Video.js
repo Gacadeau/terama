@@ -49,7 +49,7 @@ console.log('video',video);
           {
             video.Short == 1 ?
               <Link href={`/short`} style={{ textDecolation: "none" }}>
-                <Image src={`${thumbnailUrl ? `${process.env.NEXT_PUBLIC_URL}/Thumbnails/${video.Image}`: `${thumbnailUrl}`}`}
+                <Image src={thumbnailUrl ?  `${thumbnailUrl}` :`${process.env.NEXT_PUBLIC_URL}/Thumbnails/${video.Image}`}
                   width={800} height={800}
                   className="w-[100%]  h-[100%] object-fit" alt="videos"
                   priority={true} placeholder='blur'
@@ -57,7 +57,7 @@ console.log('video',video);
               </Link>
               :
               <Link href={`/Watch?v=${video.uniid}`} style={{ textDecolation: "none" }}>
-                <Image src={`${thumbnailUrl ? `${process.env.NEXT_PUBLIC_URL}/Thumbnails/${video.Image}`: `${thumbnailUrl}`}`}
+                <Image src={thumbnailUrl ?  `${thumbnailUrl}` :`${process.env.NEXT_PUBLIC_URL}/Thumbnails/${video.Image}`}
                   width={800} height={800}
                   className="w-[100%]  h-[100%] object-fit" alt="videos"
                   priority={true} placeholder='blur'
