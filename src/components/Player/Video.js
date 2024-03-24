@@ -7,6 +7,7 @@ import { useState,useEffect } from 'react'
 function Video({ video }) {
   const [online, setOnline] = useState(true);
   const period = usePeriod(video.Created_at)
+  const [thumbnailUrl, setThumbnailUrl] = useState(null);
 
   useEffect(()=>{
     const handleOnlineStatusChange = () =>{
@@ -21,6 +22,24 @@ function Video({ video }) {
     }
 
   },[]);
+  useEffect(() => {
+    const getThumbnailFromCache = async () => {
+      try {
+        const cache = await caches.open('downloaded-videos-cache');
+        const response = await cache.match(`/Thumbnails/${video.Image}`);
+        if (response) {
+          const blob = await response.blob();
+          setThumbnailUrl(URL.createObjectURL(blob));
+        }
+      } catch (error) {
+        console.error('Error fetching thumbnail from cache:', error);
+      }
+    };
+
+    if (!online && video && video.Image) {
+      getThumbnailFromCache();
+    }
+  }, [online, video]);
 console.log('video',video);
   return (
     <>
@@ -30,15 +49,15 @@ console.log('video',video);
           {
             video.Short == 1 ?
               <Link href={`/short`} style={{ textDecolation: "none" }}>
-                <Image src={`${process.env.NEXT_PUBLIC_URL}/Thumbnails/${video.Image}`}
+                <Image src={`${thumbnailUrl ? `${process.env.NEXT_PUBLIC_URL}/Thumbnails/${video.Image}`: `${thumbnailUrl}`}`}
                   width={800} height={800}
                   className="w-[100%]  h-[100%] object-fit" alt="videos"
                   priority={true} placeholder='blur'
                   blurDataURL="data:image/png;base64,...(base64-encoded image data)" />
               </Link>
               :
-              <Link href={online ? `/Watch?v=${video.uniid}` : `${process.env.NEXT_PUBLIC_URL}/${video.url}`} style={{ textDecolation: "none" }}>
-                <Image src={`${process.env.NEXT_PUBLIC_URL}/Thumbnails/${video.Image}`}
+              <Link href={`/Watch?v=${video.uniid}`} style={{ textDecolation: "none" }}>
+                <Image src={`${thumbnailUrl ? `${process.env.NEXT_PUBLIC_URL}/Thumbnails/${video.Image}`: `${thumbnailUrl}`}`}
                   width={800} height={800}
                   className="w-[100%]  h-[100%] object-fit" alt="videos"
                   priority={true} placeholder='blur'
